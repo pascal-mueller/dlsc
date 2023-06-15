@@ -414,27 +414,15 @@ class Pinns:
     ################################################################################################
     
     def plotting(self):
-        inputs = self.soboleng.draw(100000)
+        inputs = self.soboleng.draw(200000)
         inputs = self.convert(inputs)
 
-        output = self.approximate_solution(inputs).reshape(
-            -1,
-        )
-        exact_output = self.exact_solution(inputs).reshape(
-            -1,
-        )
+        output = self.approximate_solution(inputs)
+        output = output.reshape(-1,)
 
         fig, axs = plt.subplots(1, 2, figsize=(16, 8), dpi=150)
-        im1 = axs[0].scatter(
-            inputs[:, 1].detach(),
-            inputs[:, 0].detach(),
-            c=exact_output.detach(),
-            cmap="jet",
-        )
-        axs[0].set_xlabel("x")
-        axs[0].set_ylabel("t")
-        plt.colorbar(im1, ax=axs[0])
-        axs[0].grid(True, which="both", ls=":")
+
+        breakpoint()
         im2 = axs[1].scatter(
             inputs[:, 1].detach(), inputs[:, 0].detach(), c=output.detach(), cmap="jet"
         )
@@ -447,7 +435,3 @@ class Pinns:
 
         plt.show()
 
-        err = (
-            torch.mean((output - exact_output) ** 2) / torch.mean(exact_output**2)
-        ) ** 0.5 * 100
-        print("L2 Relative Error Norm: ", err.item(), "%")
